@@ -1,0 +1,22 @@
+{
+    "_comment": "Fixture: Test cases for duplicate SKU scenarios in PrestaShop module tests.",
+    "existing_product": {
+        "sku": "DUPE-001",
+        "name": "Duplicate Product",
+        "price": 29.99,
+        "description": "This product already exists in the database",
+        "quantity": 10
+    },
+    "duplicate_request": {
+        "sku": "DUPE-001",
+        "name": "Updated Name for Duplicate",
+        "price": 34.99,
+        "description": "Updated description",
+        "quantity": 20
+    },
+    "new_unique": {
+        "sku": "UNIQUE-001",
+        "name": "Unique Product",
+        "price": 19.99
+    }
+}

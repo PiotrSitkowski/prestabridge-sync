@@ -1,7 +1,7 @@
 #!/bin/bash
 # e2e-test.sh — uruchamiać po deploy
 
-WORKER_URL="https://prestabridge-router.xxx.workers.dev/import"
+WORKER_URL="https://prestabridge-router.meriscrap.workers.dev/import"
 SECRET="test-secret"
 BODY='{"products":[{"sku":"E2E-001","name":"E2E Test","price":9.99,"images":["https://via.placeholder.com/150"]}],"batchSize":5}'
 

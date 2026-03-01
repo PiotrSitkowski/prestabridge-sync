@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
   <name>prestabridge</name>
-  <displayName><![CDATA[PrestaBridge]]></displayName>
+  <displayName><![CDATA[MeriBridge]]></displayName>
   <version><![CDATA[1.0.0]]></version>
   <description><![CDATA[Product synchronization bridge between CloudFlare and PrestaShop. Imports products from Google Sheets via CloudFlare Workers.]]></description>
-  <author><![CDATA[PrestaBridge Team]]></author>
+  <author><![CDATA[Universal MEDIA Piotr Sitkowski]]></author>
   <tab><![CDATA[administration]]></tab>
   <is_configurable>1</is_configurable>
   <need_instance>0</need_instance>

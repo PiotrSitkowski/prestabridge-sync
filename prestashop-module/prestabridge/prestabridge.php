@@ -14,7 +14,7 @@ if (!defined('_PS_VERSION_')) {
  * PrestaBridge — Product synchronization bridge between CloudFlare and PrestaShop.
  *
  * @version 1.0.0
- * @author  PrestaBridge Team
+ * @author  Universal MEDIA Piotr Sitkowski
  */
 class PrestaBridge extends Module
 {
@@ -23,13 +23,14 @@ class PrestaBridge extends Module
         $this->name = 'prestabridge';
         $this->tab = 'administration';
         $this->version = '1.0.0';
-        $this->author = 'PrestaBridge Team';
+        $this->author = 'Universal MEDIA Piotr Sitkowski';
+        $this->author_uri = 'https://universalmedia.pl';
         $this->need_instance = 0;
         $this->bootstrap = true;
 
         parent::__construct();
 
-        $this->displayName = $this->l('PrestaBridge');
+        $this->displayName = $this->l('MeriBridge');
         $this->description = $this->l('Product synchronization bridge between CloudFlare and PrestaShop.');
     }
 

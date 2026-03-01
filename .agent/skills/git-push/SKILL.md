@@ -115,6 +115,9 @@ git push origin main
 git push -u origin <branch-name>
 ```
 
+### PRO TIP DLA AGENTA (Omijanie zawieszania konsoli na Windows/PowerShell):
+Gdy uruchamiasz w narzędziu komendy `git commit` a zwłaszcza `git push`, procesy potrafią zablokować się podtrzymując wyjścia. Dlatego **ZAWSZE** określaj bardzo niski `WaitDurationSeconds` (np. 5 lub 10 sekund) w narzędziu `command_status`. Jeśli komenda nie odpowie (timeout), zignoruj to pod warunkiem, że weryfikacja (np. ponowy `git log` lub `git status`) pokaże że się powiodło. Nigdy nie czekaj domyślnych 300s na `git push`!
+
 ### Zakazy bezwzględne
 - NIE używaj `git add .` bez wcześniejszego `git status`
 - NIE commituj: `node_modules/`, `.wrangler/`, `vendor/`, `.env`

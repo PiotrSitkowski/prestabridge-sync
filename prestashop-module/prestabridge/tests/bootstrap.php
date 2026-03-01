@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1)
+;
 
 // ============================================================
 // PrestaShop Constants (for tests)
@@ -130,7 +131,7 @@ if (!class_exists('Db')) {
             return true;
         }
 
-        public function executeS(string $sql): array|false
+        public function executeS(string $sql): array
         {
             $this->lastQuery = $sql;
             return $this->returnRows;
@@ -379,7 +380,8 @@ if (!class_exists('ImageManager')) {
             int $width,
             int $height,
             string $type = 'jpg'
-        ): bool {
+            ): bool
+        {
             self::$resizeCalls[] = compact('src', 'dst', 'width', 'height', 'type');
             return true;
         }
@@ -447,7 +449,7 @@ if (!class_exists('Module')) {
 
         public function __construct()
         {
-            // base stub
+        // base stub
         }
 
         public function install(): bool

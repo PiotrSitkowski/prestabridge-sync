@@ -19,7 +19,7 @@ use PrestaBridge\Tracking\ImportTracker;
  * Trigger example (crontab):
  *   *\/2 * * * * curl -s "https://shop.example.com/module/prestabridge/cron?token=TOKEN&limit=10"
  */
-class PrestaBridgeCronModuleFrontController extends ModuleFrontController
+class PrestabridgeCronModuleFrontController extends ModuleFrontController
 {
     /**
      * @var bool Disable PS layout — return raw JSON output

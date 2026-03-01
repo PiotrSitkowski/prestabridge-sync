@@ -18,7 +18,7 @@ use PrestaBridge\Tracking\ImportTracker;
  * Method: POST only
  * Auth: X-PrestaBridge-Auth: timestamp.hmac_signature
  */
-class PrestaBridgeApiModuleFrontController extends ModuleFrontController
+class PrestabridgeApiModuleFrontController extends ModuleFrontController
 {
     /**
      * @var bool Disable PS layout — return raw JSON output

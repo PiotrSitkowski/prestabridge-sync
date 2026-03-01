@@ -56,19 +56,5 @@
 </div>{* /prestabridge-admin *}
 
 <script>
-  // Restore last active tab from sessionStorage
-  (function () {
-    var activeTab = sessionStorage.getItem('prestabridge_active_tab');
-    if (activeTab) {
-      var el = document.querySelector('[href="' + activeTab + '"]');
-      if (el) {
-        el.click();
-      }
-    }
-    document.querySelectorAll('#prestabridgeTabs .nav-link').forEach(function (link) {
-      link.addEventListener('shown.bs.tab', function (e) {
-        sessionStorage.setItem('prestabridge_active_tab', e.target.getAttribute('href'));
-      });
-    });
-  })();
+  // Script removed to ensure first tab is always default
 </script>

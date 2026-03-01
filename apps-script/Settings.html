@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrestaBridge — Ustawienia</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Google Sans', Roboto, Arial, sans-serif;
+      font-size: 14px;
+      color: #202124;
+      background: #fff;
+      padding: 20px 24px 16px;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: 500;
+      color: #1a73e8;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #1a73e8;
+      border-radius: 3px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #5f6368;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #dadce0;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #202124;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: #f8f9fa;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="number"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.12);
+      background: #fff;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #80868b;
+      margin-top: 4px;
+    }
+
+    .secret-note {
+      font-size: 11px;
+      color: #5f6368;
+      background: #fef7e0;
+      border: 1px solid #f9ab00;
+      border-radius: 4px;
+      padding: 6px 10px;
+      margin-top: 4px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e8eaed;
+      margin: 18px 0 14px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    button {
+      padding: 9px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+
+    button.primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+
+    button.primary:hover:not(:disabled) {
+      background: #1765cc;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    button.secondary {
+      background: #f1f3f4;
+      color: #3c4043;
+    }
+
+    button.secondary:hover {
+      background: #e8eaed;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #status {
+      font-size: 12px;
+      color: #188038;
+      min-height: 18px;
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    #status.error {
+      color: #d93025;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>PrestaBridge — Ustawienia</h2>
+
+  <div class="form-group">
+    <label for="workerUrl">Worker URL</label>
+    <input
+      type="text"
+      id="workerUrl"
+      name="workerUrl"
+      placeholder="https://prestabridge-router.twojadomena.workers.dev/import"
+      autocomplete="off"
+    />
+    <div class="hint">Adres URL endpointu CF Worker Router (/import)</div>
+  </div>
+
+  <div class="form-group">
+    <label for="authSecret">Auth Secret</label>
+    <input
+      type="password"
+      id="authSecret"
+      name="authSecret"
+      placeholder="Zostaw puste aby nie zmieniać istniejącego"
+      autocomplete="new-password"
+    />
+    <div class="secret-note" id="secretStatus">⚡ Sekret przechowywany w PropertiesService — nie jest zapisywany w kodzie skryptu.</div>
+  </div>
+
+  <div class="form-group">
+    <label for="batchSize">Batch Size</label>
+    <input
+      type="number"
+      id="batchSize"
+      name="batchSize"
+      value="5"
+      min="1"
+      max="50"
+    />
+    <div class="hint">Liczba produktów w jednej paczce do kolejki CF (1–50, domyślnie 5)</div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="actions">
+    <span id="status"></span>
+    <button class="secondary" onclick="google.script.host.close()">Anuluj</button>
+    <button class="primary" id="saveBtn" onclick="onSave()">Zapisz</button>
+  </div>
+
+  <script>
+    // ---------------------------------------------------------------------------
+    // Załaduj bieżące ustawienia przy otwarciu dialogu
+    // ---------------------------------------------------------------------------
+    google.script.run
+      .withSuccessHandler(function(settings) {
+        if (settings.workerUrl) {
+          document.getElementById('workerUrl').value = settings.workerUrl;
+        }
+        if (settings.batchSize) {
+          document.getElementById('batchSize').value = settings.batchSize;
+        }
+        if (settings.authSecretSet) {
+          document.getElementById('secretStatus').textContent =
+            '✓ Auth Secret jest już ustawiony. Zostaw puste aby zachować, lub wpisz nowy aby nadpisać.';
+        }
+      })
+      .withFailureHandler(function(err) {
+        showStatus('Błąd ładowania ustawień: ' + err.message, true);
+      })
+      .getSettings();
+
+    // ---------------------------------------------------------------------------
+    // Zapis ustawień
+    // ---------------------------------------------------------------------------
+    function onSave() {
+      var workerUrl  = document.getElementById('workerUrl').value.trim();
+      var authSecret = document.getElementById('authSecret').value.trim();
+      var batchSize  = parseInt(document.getElementById('batchSize').value, 10);
+
+      // Walidacja po stronie klienta
+      if (!workerUrl) {
+        showStatus('Worker URL jest wymagany.', true);
+        return;
+      }
+      if (!workerUrl.startsWith('https://') && !workerUrl.startsWith('http://')) {
+        showStatus('Worker URL musi zaczynać się od http:// lub https://', true);
+        return;
+      }
+      if (isNaN(batchSize) || batchSize < 1 || batchSize > 50) {
+        showStatus('Batch Size musi być liczbą od 1 do 50.', true);
+        return;
+      }
+
+      setBusy(true);
+      showStatus('');
+
+      google.script.run
+        .withSuccessHandler(function() {
+          showStatus('✓ Ustawienia zapisane pomyślnie!', false);
+          setBusy(false);
+          // Zamknij dialog po 1.2 sekundy
+          setTimeout(function() {
+            google.script.host.close();
+          }, 1200);
+        })
+        .withFailureHandler(function(err) {
+          showStatus('Błąd zapisu: ' + err.message, true);
+          setBusy(false);
+        })
+        .saveSettings({
+          workerUrl:  workerUrl,
+          authSecret: authSecret,
+          batchSize:  batchSize
+        });
+    }
+
+    function showStatus(msg, isError) {
+      var el = document.getElementById('status');
+      el.textContent = msg;
+      el.className = isError ? 'error' : '';
+    }
+
+    function setBusy(busy) {
+      document.getElementById('saveBtn').disabled = busy;
+      if (busy) {
+        document.getElementById('saveBtn').textContent = 'Zapisuję…';
+      } else {
+        document.getElementById('saveBtn').textContent = 'Zapisz';
+      }
+    }
+  </script>
+
+</body>
+</html>

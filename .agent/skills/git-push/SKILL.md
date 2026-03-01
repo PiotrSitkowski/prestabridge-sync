@@ -5,6 +5,8 @@ description: Użyj tego skilla gdy zadanie dotyczy commitowania zmian i wypychan
 
 # SKILL: git-push
 
+### WAŻNE: nie używaj && w poleceniach git. Używaj ; zamiast &&.
+
 ### Kiedy aktywować
 Zadanie dotyczy commitowania zmian, pushowania do GitHub lub opisywania historii zmian.
 

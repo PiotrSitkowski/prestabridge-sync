@@ -483,6 +483,97 @@ if (!class_exists('Validate')) {
 }
 
 // ============================================================
+// PHP extension function mocks (fileinfo, exif)
+// These may not be available in all PHP CLI installations
+// ============================================================
+if (!defined('FILEINFO_MIME_TYPE')) {
+    define('FILEINFO_MIME_TYPE', 16);
+}
+
+if (!class_exists('finfo')) {
+    class finfo
+    {
+        private int $flags;
+
+        public function __construct(int $flags = 0)
+        {
+            $this->flags = $flags;
+        }
+
+        public function file(string $filename): string
+        {
+            return mime_content_type($filename);
+        }
+    }
+}
+if (!function_exists('mime_content_type')) {
+    function mime_content_type(string $filename): string
+    {
+        // Detect by magic bytes
+        $handle = fopen($filename, 'rb');
+        if (!$handle) {
+            return 'application/octet-stream';
+        }
+        $header = fread($handle, 4);
+        fclose($handle);
+
+        if (str_starts_with($header, "\xFF\xD8\xFF")) {
+            return 'image/jpeg';
+        }
+        if (str_starts_with($header, "\x89PNG")) {
+            return 'image/png';
+        }
+        if (str_starts_with($header, "GIF8")) {
+            return 'image/gif';
+        }
+        if (str_starts_with($header, "RIFF")) {
+            return 'image/webp';
+        }
+        return 'application/octet-stream';
+    }
+}
+
+if (!function_exists('exif_imagetype')) {
+    function exif_imagetype(string $filename): int|false
+    {
+        $handle = fopen($filename, 'rb');
+        if (!$handle) {
+            return false;
+        }
+        $header = fread($handle, 4);
+        fclose($handle);
+
+        if (str_starts_with($header, "\xFF\xD8\xFF")) {
+            return IMAGETYPE_JPEG;
+        }
+        if (str_starts_with($header, "\x89PNG")) {
+            return IMAGETYPE_PNG;
+        }
+        if (str_starts_with($header, "GIF8")) {
+            return IMAGETYPE_GIF;
+        }
+        if (str_starts_with($header, "RIFF")) {
+            return IMAGETYPE_WEBP;
+        }
+        return false;
+    }
+}
+
+if (!function_exists('image_type_to_extension')) {
+    function image_type_to_extension(int $type, bool $dot = true): string|false
+    {
+        $prefix = $dot ? '.' : '';
+        return match ($type) {
+                IMAGETYPE_JPEG => $prefix . 'jpg',
+                IMAGETYPE_PNG => $prefix . 'png',
+                IMAGETYPE_GIF => $prefix . 'gif',
+                IMAGETYPE_WEBP => $prefix . 'webp',
+                default => false,
+            };
+    }
+}
+
+// ============================================================
 // Autoloader (PSR-4 for PrestaBridge namespace)
 // ============================================================
 spl_autoload_register(function (string $class): void {

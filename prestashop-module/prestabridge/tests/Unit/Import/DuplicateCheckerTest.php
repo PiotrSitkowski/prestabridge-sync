@@ -75,10 +75,10 @@ class DuplicateCheckerTest extends TestCase
         // Act
         DuplicateChecker::getProductIdBySku($dangerousSku);
 
-        // Assert — query must NOT contain the raw dangerous string
+        // Assert — pSQL() should have escaped the single quote
         $query = $this->db->lastQuery ?? '';
-        $this->assertStringNotContainsString("'; DROP TABLE products; --", $query);
-        // pSQL() should have escaped the single quote
         $this->assertStringContainsString('ps_product', $query);
+        // pSQL() escapes ' to \' — verify the escaped form is present
+        $this->assertStringContainsString("\\'", $query);
     }
 }

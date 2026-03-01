@@ -23,7 +23,7 @@ class BridgeLoggerTest extends TestCase
     public function testInsertsLogWithAllFields(): void
     {
         // Arrange & Act
-        BridgeLogger::error('msg', ['key' => 'val'], 'import', 'SKU-1', 42, 'req-1');
+        BridgeLogger::log('error', 'msg', ['key' => 'val'], 'import', 'SKU-1', 42, 'req-1');
 
         // Assert
         $this->assertCount(1, $this->db->insertCalls);

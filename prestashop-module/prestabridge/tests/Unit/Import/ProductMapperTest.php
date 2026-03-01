@@ -26,7 +26,7 @@ class ProductMapperTest extends TestCase
         Context::reset();
 
         $fixtures = json_decode(
-            file_get_contents(__DIR__ . '/../../../../shared/fixtures/valid-products.json'),
+            file_get_contents(__DIR__ . '/../../../../../shared/fixtures/valid-products.json'),
             true
         );
         $this->validMinimal = $fixtures['minimal'][0];

@@ -31,7 +31,7 @@ class ProductImporterTest extends TestCase
         Context::reset();
 
         $fixtures = json_decode(
-            file_get_contents(__DIR__ . '/../../../../shared/fixtures/valid-products.json'),
+            file_get_contents(__DIR__ . '/../../../../../shared/fixtures/valid-products.json'),
             true
         );
         $this->validPayload = $fixtures['minimal'][0]; // {sku: 'MIN-001', name: 'Minimal Product 1', price: 9.99}

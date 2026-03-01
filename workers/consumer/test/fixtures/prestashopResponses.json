@@ -1,0 +1,68 @@
+{
+    "success": {
+        "success": true,
+        "results": [
+            {
+                "sku": "SKU-001",
+                "status": "created",
+                "productId": 101,
+                "imagesQueued": 0
+            },
+            {
+                "sku": "SKU-002",
+                "status": "created",
+                "productId": 102,
+                "imagesQueued": 2
+            },
+            {
+                "sku": "SKU-003",
+                "status": "updated",
+                "productId": 55,
+                "imagesQueued": 1
+            },
+            {
+                "sku": "SKU-004",
+                "status": "created",
+                "productId": 103,
+                "imagesQueued": 0
+            },
+            {
+                "sku": "SKU-005",
+                "status": "created",
+                "productId": 104,
+                "imagesQueued": 0
+            }
+        ]
+    },
+    "partialSuccess": {
+        "success": true,
+        "results": [
+            {
+                "sku": "SKU-001",
+                "status": "created",
+                "productId": 101,
+                "imagesQueued": 0
+            },
+            {
+                "sku": "SKU-002",
+                "status": "error",
+                "productId": 0,
+                "error": "Validation failed"
+            },
+            {
+                "sku": "SKU-003",
+                "status": "skipped",
+                "productId": 55,
+                "imagesQueued": 0
+            }
+        ]
+    },
+    "serverError": {
+        "success": false,
+        "error": "Internal Server Error"
+    },
+    "unauthorized": {
+        "success": false,
+        "error": "Unauthorized"
+    }
+}

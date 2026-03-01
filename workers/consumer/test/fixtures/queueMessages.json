@@ -1,0 +1,60 @@
+{
+    "valid": {
+        "requestId": "550e8400-e29b-41d4-a716-446655440000",
+        "batchIndex": 0,
+        "totalBatches": 2,
+        "products": [
+            {
+                "sku": "SKU-001",
+                "name": "Product One",
+                "price": 29.99
+            },
+            {
+                "sku": "SKU-002",
+                "name": "Product Two",
+                "price": 49.99
+            },
+            {
+                "sku": "SKU-003",
+                "name": "Product Three",
+                "price": 14.99
+            },
+            {
+                "sku": "SKU-004",
+                "name": "Product Four",
+                "price": 99.00
+            },
+            {
+                "sku": "SKU-005",
+                "name": "Product Five",
+                "price": 5.50
+            }
+        ],
+        "metadata": {
+            "enqueuedAt": "2026-03-01T12:00:00.000Z",
+            "source": "google-sheets"
+        }
+    },
+    "singleProduct": {
+        "requestId": "550e8400-e29b-41d4-a716-446655440001",
+        "batchIndex": 0,
+        "totalBatches": 1,
+        "products": [
+            {
+                "sku": "SKU-SINGLE",
+                "name": "Single Product",
+                "price": 19.99
+            }
+        ],
+        "metadata": {
+            "enqueuedAt": "2026-03-01T12:00:00.000Z",
+            "source": "google-sheets"
+        }
+    },
+    "malformed": "not valid json {{",
+    "missingProducts": {
+        "requestId": "550e8400-e29b-41d4-a716-446655440002",
+        "batchIndex": 0,
+        "totalBatches": 1
+    }
+}

@@ -1,9 +1,38 @@
 # CLAUDE.md — PrestaBridge: System Synchronizacji Google Sheets → CloudFlare → PrestaShop
 
-> **Wersja dokumentu:** 2.0.0
-> **Data:** 2026-02-28
+> **Wersja dokumentu:** 2.1.0
+> **Data:** 2026-03-01
 > **Autor architektury:** Senior Architect (Claude)
 > **Cel dokumentu:** Specyfikacja techniczna systemu dla agentów AI — zero interpretacji, zero halucynacji.
+
+---
+
+## ARCHITEKTURA KONFIGURACJI AGENTÓW AI
+
+Projekt obsługuje wiele środowisk agentycznych przez dedykowane pliki konfiguracyjne:
+
+| Środowisko | Plik reguł | Skille/Kontekst |
+|------------|-----------|-----------------|
+| **Claude Code** | `CLAUDE.md` (ten plik) | `.agent/skills/*/SKILL.md` |
+| **Google Antigravity** | `.agent/rules/project-rules.md` | `.agent/skills/*/SKILL.md` |
+| **Cursor** | `.cursorrules` | — |
+| **Windsurf** | `.windsurfrules` | — |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | — |
+
+### Skille Antigravity (`.agent/skills/`)
+Każdy skill aktywowany jest kontekstowo przez agenta na podstawie pliku, nad którym pracuje:
+
+| Skill | Kiedy aktywować |
+|-------|----------------|
+| `cloudflare-workers` | Pliki w `/workers/router/` lub `/workers/consumer/` |
+| `prestashop-module` | Pliki w `/prestashop-module/prestabridge/` |
+| `google-apps-script` | Pliki w `/apps-script/` |
+| `testing` | Pisanie lub modyfikacja testów |
+| `security` | Autentykacja, autoryzacja, walidacja inputu |
+| `error-handling` | Obsługa błędów, logowanie, diagnostyka |
+| `race-conditions` | Operacje na zdjęciach, CRON, równoległy dostęp |
+| `prestashop-admin-ui` | Pliki w `/views/templates/admin/` lub `getContent()` |
+| `deployment` | Deploy, konfiguracja serwera, CI/CD |
 
 ---
 

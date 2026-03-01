@@ -1,0 +1,187 @@
+{
+  "_comment": "Fixture: Nieprawidłowe produkty do testów. ŻADEN z nich nie może przejść walidacji.",
+  "missing_required": [
+    {
+      "_test_id": "INV-MR1",
+      "_expected_errors": ["sku is required"],
+      "name": "No SKU Product",
+      "price": 10.00
+    },
+    {
+      "_test_id": "INV-MR2",
+      "_expected_errors": ["name is required"],
+      "sku": "NO-NAME",
+      "price": 10.00
+    },
+    {
+      "_test_id": "INV-MR3",
+      "_expected_errors": ["price is required"],
+      "sku": "NO-PRICE",
+      "name": "No Price Product"
+    },
+    {
+      "_test_id": "INV-MR4",
+      "_expected_errors": ["sku is required", "name is required", "price is required"],
+      "_comment": "Completely empty object"
+    },
+    {
+      "_test_id": "INV-MR5",
+      "_expected_errors": ["sku is required", "name is required", "price is required"],
+      "unknownField": "value",
+      "anotherField": 123
+    }
+  ],
+  "invalid_types": [
+    {
+      "_test_id": "INV-T1",
+      "_expected_errors": ["price must be a number"],
+      "sku": "TYPE-001",
+      "name": "Price Is String",
+      "price": "not-a-number"
+    },
+    {
+      "_test_id": "INV-T2",
+      "_expected_errors": ["price must be a number"],
+      "sku": "TYPE-002",
+      "name": "Price Is Boolean",
+      "price": true
+    },
+    {
+      "_test_id": "INV-T3",
+      "_expected_errors": ["price must be a number"],
+      "sku": "TYPE-003",
+      "name": "Price Is Null",
+      "price": null
+    },
+    {
+      "_test_id": "INV-T4",
+      "_expected_errors": ["sku is required"],
+      "_comment": "sku is number instead of string",
+      "sku": 12345,
+      "name": "SKU Is Number",
+      "price": 10.00
+    },
+    {
+      "_test_id": "INV-T5",
+      "_expected_errors": ["images must be an array"],
+      "sku": "TYPE-005",
+      "name": "Images Is String",
+      "price": 10.00,
+      "images": "https://example.com/img.jpg"
+    },
+    {
+      "_test_id": "INV-T6",
+      "_expected_errors": ["images must be an array"],
+      "sku": "TYPE-006",
+      "name": "Images Is Object",
+      "price": 10.00,
+      "images": { "url": "https://example.com/img.jpg" }
+    }
+  ],
+  "invalid_values": [
+    {
+      "_test_id": "INV-V1",
+      "_expected_errors": ["price must be greater than 0"],
+      "sku": "VAL-001",
+      "name": "Zero Price",
+      "price": 0
+    },
+    {
+      "_test_id": "INV-V2",
+      "_expected_errors": ["price must be greater than 0"],
+      "sku": "VAL-002",
+      "name": "Negative Price",
+      "price": -9.99
+    },
+    {
+      "_test_id": "INV-V3",
+      "_expected_errors": ["sku is required"],
+      "_comment": "Empty string sku",
+      "sku": "",
+      "name": "Empty SKU",
+      "price": 10.00
+    },
+    {
+      "_test_id": "INV-V4",
+      "_expected_errors": ["name is required"],
+      "_comment": "Empty string name",
+      "sku": "VAL-004",
+      "name": "",
+      "price": 10.00
+    },
+    {
+      "_test_id": "INV-V5",
+      "_expected_errors": ["sku must not exceed 64 characters"],
+      "sku": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "name": "SKU Too Long (65 chars)",
+      "price": 10.00
+    },
+    {
+      "_test_id": "INV-V6",
+      "_expected_errors": ["name must not exceed 128 characters"],
+      "sku": "VAL-006",
+      "name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "price": 10.00
+    }
+  ],
+  "invalid_images": [
+    {
+      "_test_id": "INV-I1",
+      "_expected_errors": ["image URL must start with http:// or https://"],
+      "sku": "IMG-001",
+      "name": "FTP Image URL",
+      "price": 10.00,
+      "images": ["ftp://example.com/img.jpg"]
+    },
+    {
+      "_test_id": "INV-I2",
+      "_expected_errors": ["image URL must start with http:// or https://"],
+      "sku": "IMG-002",
+      "name": "No Protocol Image",
+      "price": 10.00,
+      "images": ["example.com/img.jpg"]
+    },
+    {
+      "_test_id": "INV-I3",
+      "_expected_errors": ["image URL must start with http:// or https://"],
+      "sku": "IMG-003",
+      "name": "Relative Path Image",
+      "price": 10.00,
+      "images": ["/images/img.jpg"]
+    },
+    {
+      "_test_id": "INV-I4",
+      "_expected_errors": ["image URL must start with http:// or https://"],
+      "sku": "IMG-004",
+      "name": "Mixed Valid Invalid Images",
+      "price": 10.00,
+      "images": ["https://example.com/valid.jpg", "not-a-url", "https://example.com/also-valid.png"]
+    }
+  ],
+  "edge_cases_invalid": [
+    {
+      "_test_id": "INV-E1",
+      "_expected_errors": ["price must be a number"],
+      "_comment": "NaN as price (in JSON this becomes null)",
+      "sku": "EDGE-001",
+      "name": "NaN Price",
+      "price": "NaN"
+    },
+    {
+      "_test_id": "INV-E2",
+      "_expected_errors": ["quantity must be a non-negative integer"],
+      "sku": "EDGE-002",
+      "name": "Negative Quantity",
+      "price": 10.00,
+      "quantity": -5
+    },
+    {
+      "_test_id": "INV-E3",
+      "_expected_errors": ["quantity must be a non-negative integer"],
+      "sku": "EDGE-003",
+      "name": "Float Quantity",
+      "price": 10.00,
+      "quantity": 5.5
+    }
+  ]
+}

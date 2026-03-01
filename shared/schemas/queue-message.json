@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "queue-message",
+  "title": "QueueMessage",
+  "description": "Schemat wiadomości w CloudFlare Queue.",
+  "type": "object",
+  "required": ["requestId", "batchIndex", "totalBatches", "products", "metadata"],
+  "properties": {
+    "requestId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "ID żądania z Router (przekazywane do PS dla trackingu)."
+    },
+    "batchIndex": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Indeks tej paczki (0-based)."
+    },
+    "totalBatches": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Łączna liczba paczek w tym żądaniu."
+    },
+    "products": {
+      "type": "array",
+      "items": { "$ref": "product-payload.json" },
+      "minItems": 1,
+      "description": "Produkty w tej paczce."
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["enqueuedAt", "source"],
+      "properties": {
+        "enqueuedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp umieszczenia w kolejce (ISO 8601)."
+        },
+        "source": {
+          "type": "string",
+          "enum": ["google-sheets", "api", "manual"],
+          "description": "Źródło danych."
+        }
+      }
+    }
+  }
+}

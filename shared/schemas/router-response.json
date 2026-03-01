@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "router-response",
+  "title": "RouterResponse",
+  "description": "Schemat odpowiedzi z CF Worker Router.",
+  "type": "object",
+  "required": ["success", "requestId", "timestamp", "summary"],
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "true jeśli przynajmniej jeden produkt został zaakceptowany."
+    },
+    "requestId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unikalny identyfikator żądania (UUID v4)."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp przetworzenia żądania (ISO 8601)."
+    },
+    "summary": {
+      "type": "object",
+      "required": ["totalReceived", "totalAccepted", "totalRejected", "batchesCreated", "batchSize"],
+      "properties": {
+        "totalReceived": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Liczba produktów otrzymanych w żądaniu."
+        },
+        "totalAccepted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Liczba produktów zaakceptowanych (wysłanych do Queue)."
+        },
+        "totalRejected": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Liczba produktów odrzuconych (walidacja)."
+        },
+        "batchesCreated": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Liczba paczek wysłanych do Queue."
+        },
+        "batchSize": {
+          "type": "integer",
+          "description": "Rozmiar paczki użyty w tym żądaniu."
+        }
+      }
+    },
+    "rejected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["index", "errors"],
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "Indeks produktu w oryginalnej tablicy (0-based)."
+          },
+          "sku": {
+            "type": "string",
+            "description": "SKU produktu (jeśli było podane)."
+          },
+          "errors": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Lista błędów walidacji."
+          }
+        }
+      },
+      "description": "Lista odrzuconych produktów z powodami."
+    }
+  }
+}

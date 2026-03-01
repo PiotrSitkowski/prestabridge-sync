@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         executionOrder="random"
+         failOnWarning="true"
+         failOnRisky="true"
+         cacheDirectory=".phpunit.cache">
+
+  <testsuites>
+    <testsuite name="Unit">
+      <directory>tests/Unit</directory>
+    </testsuite>
+    <testsuite name="Integration">
+      <directory>tests/Integration</directory>
+    </testsuite>
+  </testsuites>
+
+  <source>
+    <include>
+      <directory>classes</directory>
+    </include>
+    <exclude>
+      <directory>classes/Export</directory>
+    </exclude>
+  </source>
+
+  <coverage>
+    <report>
+      <html outputDirectory="coverage"/>
+      <text outputFile="php://stdout"/>
+    </report>
+  </coverage>
+
+  <php>
+    <const name="_DB_PREFIX_" value="ps_"/>
+    <const name="_PS_VERSION_" value="8.1.0"/>
+    <const name="_PS_ROOT_DIR_" value="/var/www/prestashop"/>
+  </php>
+</phpunit>

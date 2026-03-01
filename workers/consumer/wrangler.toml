@@ -1,0 +1,26 @@
+name = "prestabridge-consumer"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Zmienne NIE-SECRET (secrety ustawiaj przez: wrangler secret put AUTH_SECRET)
+[vars]
+ENVIRONMENT = "production"
+PRESTASHOP_ENDPOINT = "https://your-shop.com/module/prestabridge/api"
+REQUEST_TIMEOUT_MS = "25000"
+
+# Queue Consumer binding
+[[queues.consumers]]
+queue = "prestabridge-product-queue"
+max_batch_size = 5
+max_retries = 3
+dead_letter_queue = "prestabridge-dlq"
+max_batch_timeout = 30
+
+# DLQ Producer (do logowania/monitoringu w przyszłości)
+[[queues.producers]]
+queue = "prestabridge-dlq"
+binding = "DLQ"
+
+[observability]
+enabled = true

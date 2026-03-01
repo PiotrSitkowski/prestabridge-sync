@@ -1,0 +1,135 @@
+{
+  "_comment": "Fixture: Edge cases — granice akceptowalności i niestandardowe dane.",
+
+  "boundary_valid": [
+    {
+      "_test_id": "EDGE-BV1",
+      "_comment": "SKU exactly 64 chars — powinien przejść",
+      "sku": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "name": "64 char SKU",
+      "price": 0.01
+    },
+    {
+      "_test_id": "EDGE-BV2",
+      "_comment": "Name exactly 128 chars — powinien przejść",
+      "sku": "BV-002",
+      "name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "price": 0.01
+    },
+    {
+      "_test_id": "EDGE-BV3",
+      "_comment": "Minimalna akceptowalna cena",
+      "sku": "BV-003",
+      "name": "Cheapest Product",
+      "price": 0.01
+    },
+    {
+      "_test_id": "EDGE-BV4",
+      "_comment": "Duża cena",
+      "sku": "BV-004",
+      "name": "Expensive Product",
+      "price": 999999.99
+    },
+    {
+      "_test_id": "EDGE-BV5",
+      "_comment": "Duży stock",
+      "sku": "BV-005",
+      "name": "High Stock Product",
+      "price": 10.00,
+      "quantity": 999999
+    },
+    {
+      "_test_id": "EDGE-BV6",
+      "_comment": "Dużo zdjęć",
+      "sku": "BV-006",
+      "name": "Many Images Product",
+      "price": 10.00,
+      "images": [
+        "https://example.com/img1.jpg",
+        "https://example.com/img2.jpg",
+        "https://example.com/img3.jpg",
+        "https://example.com/img4.jpg",
+        "https://example.com/img5.jpg",
+        "https://example.com/img6.jpg",
+        "https://example.com/img7.jpg",
+        "https://example.com/img8.jpg",
+        "https://example.com/img9.jpg",
+        "https://example.com/img10.jpg"
+      ]
+    },
+    {
+      "_test_id": "EDGE-BV7",
+      "_comment": "Opis z polskimi znakami i encjami HTML",
+      "sku": "BV-007",
+      "name": "Zażółć gęślą jaźń",
+      "price": 15.50,
+      "description": "<h2>Opis produktu</h2><p>Zażółć gęślą jaźń &amp; inne znaki: €£¥</p><ul><li>Punkt 1</li><li>Punkt 2</li></ul>"
+    }
+  ],
+
+  "boundary_invalid": [
+    {
+      "_test_id": "EDGE-BI1",
+      "_comment": "SKU 65 chars — za długie",
+      "sku": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "name": "65 char SKU",
+      "price": 10.00
+    },
+    {
+      "_test_id": "EDGE-BI2",
+      "_comment": "Name 129 chars — za długie",
+      "sku": "BI-002",
+      "name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "price": 10.00
+    }
+  ],
+
+  "request_boundaries": {
+    "_comment": "Testowanie granic żądania RouterRequest",
+    "valid_single": {
+      "products": [{ "sku": "SINGLE-001", "name": "Single", "price": 10 }],
+      "batchSize": 1
+    },
+    "valid_max_batch": {
+      "products": [{ "sku": "MAX-001", "name": "Max Batch", "price": 10 }],
+      "batchSize": 50
+    },
+    "invalid_batch_0": {
+      "products": [{ "sku": "ZERO-001", "name": "Zero Batch", "price": 10 }],
+      "batchSize": 0
+    },
+    "invalid_batch_51": {
+      "products": [{ "sku": "OVER-001", "name": "Over Batch", "price": 10 }],
+      "batchSize": 51
+    }
+  },
+
+  "mixed_batch": {
+    "_comment": "Batch z mieszanką poprawnych i niepoprawnych produktów",
+    "products": [
+      { "sku": "MIX-001", "name": "Valid 1", "price": 10.00 },
+      { "sku": "", "name": "Invalid Empty SKU", "price": 10.00 },
+      { "sku": "MIX-003", "name": "Valid 3", "price": 25.00 },
+      { "sku": "MIX-004", "name": "Invalid Zero Price", "price": 0 },
+      { "sku": "MIX-005", "name": "Valid 5", "price": 99.99, "images": ["https://example.com/img.jpg"] },
+      { "name": "Missing SKU", "price": 10.00 },
+      { "sku": "MIX-007", "name": "Valid 7", "price": 5.00 },
+      { "sku": "MIX-008", "name": "Invalid Image", "price": 10.00, "images": ["not-url"] },
+      { "sku": "MIX-009", "name": "Valid 9", "price": 15.00 },
+      { "sku": "MIX-010", "name": "Valid 10", "price": 20.00 }
+    ],
+    "_expected_valid_count": 6,
+    "_expected_invalid_count": 4,
+    "_expected_valid_skus": ["MIX-001", "MIX-003", "MIX-005", "MIX-007", "MIX-009", "MIX-010"],
+    "_expected_invalid_indices": [1, 3, 5, 7]
+  },
+
+  "duplicate_skus": {
+    "_comment": "Produkty z duplikatami SKU — test DuplicateChecker w PS",
+    "products": [
+      { "sku": "DUP-001", "name": "First Occurrence", "price": 10.00 },
+      { "sku": "DUP-001", "name": "Second Occurrence (duplicate)", "price": 20.00 },
+      { "sku": "DUP-002", "name": "Unique Product", "price": 30.00 }
+    ]
+  }
+}

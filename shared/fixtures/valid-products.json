@@ -1,0 +1,80 @@
+{
+  "_comment": "Fixture: Prawidłowe produkty do testów. Każdy produkt MUSI przejść walidację.",
+  "minimal": [
+    {
+      "sku": "MIN-001",
+      "name": "Minimal Product 1",
+      "price": 9.99
+    },
+    {
+      "sku": "MIN-002",
+      "name": "Minimal Product 2",
+      "price": 0.01
+    },
+    {
+      "sku": "MIN-003",
+      "name": "Minimal Product 3",
+      "price": 99999.99
+    }
+  ],
+  "full": [
+    {
+      "sku": "FULL-001",
+      "name": "Full Product With All Fields",
+      "price": 49.99,
+      "description": "<p>This is a <strong>full</strong> product description with HTML.</p>",
+      "description_short": "Short description for listing pages",
+      "images": [
+        "https://example.com/images/product-001-main.jpg",
+        "https://example.com/images/product-001-side.jpg",
+        "https://example.com/images/product-001-back.png"
+      ],
+      "quantity": 150,
+      "ean13": "5901234123457",
+      "weight": 1.25,
+      "active": true,
+      "meta_title": "Full Product - Best Quality",
+      "meta_description": "Buy Full Product With All Fields at the best price. Free shipping."
+    },
+    {
+      "sku": "FULL-002",
+      "name": "Product With Empty Optionals",
+      "price": 19.99,
+      "description": "",
+      "description_short": "",
+      "images": [],
+      "quantity": 0,
+      "ean13": "",
+      "weight": 0,
+      "active": false,
+      "meta_title": "",
+      "meta_description": ""
+    }
+  ],
+  "batch_10": [
+    { "sku": "BATCH-001", "name": "Batch Product 1", "price": 10.00 },
+    { "sku": "BATCH-002", "name": "Batch Product 2", "price": 20.00 },
+    { "sku": "BATCH-003", "name": "Batch Product 3", "price": 30.00 },
+    { "sku": "BATCH-004", "name": "Batch Product 4", "price": 40.00 },
+    { "sku": "BATCH-005", "name": "Batch Product 5", "price": 50.00 },
+    { "sku": "BATCH-006", "name": "Batch Product 6", "price": 60.00 },
+    { "sku": "BATCH-007", "name": "Batch Product 7", "price": 70.00 },
+    { "sku": "BATCH-008", "name": "Batch Product 8", "price": 80.00 },
+    { "sku": "BATCH-009", "name": "Batch Product 9", "price": 90.00 },
+    { "sku": "BATCH-010", "name": "Batch Product 10", "price": 100.00 }
+  ],
+  "with_special_chars": [
+    {
+      "sku": "SPECIAL-001",
+      "name": "Produkt z polskimi znakami: ąćęłńóśźż ĄĆĘŁŃÓŚŹŻ",
+      "price": 15.50,
+      "description": "<p>Opis z &amp; encjami &lt;HTML&gt; i \"cudzysłowami\"</p>"
+    },
+    {
+      "sku": "SPECIAL-002",
+      "name": "Product with 'quotes' and \"double quotes\"",
+      "price": 25.00,
+      "description": "Line 1\nLine 2\nLine 3"
+    }
+  ]
+}

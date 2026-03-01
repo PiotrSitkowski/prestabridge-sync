@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ps-response",
+  "title": "PSResponse",
+  "description": "Schemat odpowiedzi z modułu PrestaShop.",
+  "type": "object",
+  "required": ["success", "results"],
+  "properties": {
+    "success": {
+      "type": "boolean",
+      "description": "true jeśli przynajmniej jeden produkt został przetworzony pomyślnie."
+    },
+    "requestId": {
+      "type": "string",
+      "description": "ID żądania przekazane z Consumer (echo)."
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sku", "status"],
+        "properties": {
+          "sku": {
+            "type": "string",
+            "description": "SKU przetworzonego produktu."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["created", "updated", "skipped", "error"],
+            "description": "Status przetwarzania: created=nowy, updated=nadpisany, skipped=duplikat pominięty, error=błąd."
+          },
+          "productId": {
+            "type": "integer",
+            "description": "ID produktu w PrestaShop (0 jeśli error)."
+          },
+          "imagesQueued": {
+            "type": "integer",
+            "description": "Liczba zdjęć dodanych do kolejki."
+          },
+          "error": {
+            "type": "string",
+            "description": "Opis błędu (tylko gdy status=error lub status=skipped)."
+          }
+        }
+      }
+    }
+  }
+}

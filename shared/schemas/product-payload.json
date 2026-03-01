@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "product-payload",
+  "title": "ProductPayload",
+  "description": "Schemat danych pojedynczego produktu w systemie PrestaBridge. JEDYNE ŹRÓDŁO PRAWDY.",
+  "type": "object",
+  "required": ["sku", "name", "price"],
+  "properties": {
+    "sku": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Unikalny identyfikator produktu (reference w PrestaShop). Nie może być pusty."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "description": "Nazwa produktu. Nie może być pusta."
+    },
+    "price": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "description": "Cena netto produktu. Musi być liczbą > 0. Nie może być NaN, Infinity, 0, ani ujemna."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 65535,
+      "default": "",
+      "description": "Opis produktu. HTML dozwolony. Opcjonalny."
+    },
+    "description_short": {
+      "type": "string",
+      "maxLength": 800,
+      "default": "",
+      "description": "Krótki opis produktu. Opcjonalny."
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https?://"
+      },
+      "default": [],
+      "description": "Lista URL-i zdjęć. Pierwszy element = cover image. Każdy URL musi zaczynać się od http:// lub https://."
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Stan magazynowy. Opcjonalny, domyślnie 0."
+    },
+    "ean13": {
+      "type": "string",
+      "maxLength": 13,
+      "pattern": "^[0-9]*$",
+      "default": "",
+      "description": "Kod EAN13. Tylko cyfry, max 13 znaków. Opcjonalny."
+    },
+    "weight": {
+      "type": "number",
+      "minimum": 0,
+      "default": 0,
+      "description": "Waga w kg. Opcjonalny, domyślnie 0."
+    },
+    "active": {
+      "type": "boolean",
+      "default": false,
+      "description": "Czy produkt aktywny. Domyślnie false (aktywacja po pobraniu zdjęć)."
+    },
+    "meta_title": {
+      "type": "string",
+      "maxLength": 128,
+      "default": "",
+      "description": "SEO meta title. Opcjonalny."
+    },
+    "meta_description": {
+      "type": "string",
+      "maxLength": 512,
+      "default": "",
+      "description": "SEO meta description. Opcjonalny."
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+vendor/
+
+# CF Workers
+.wrangler/
+.dev.vars
+
+# PHP
+.phpunit.cache/
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local

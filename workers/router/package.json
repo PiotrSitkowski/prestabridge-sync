@@ -1,0 +1,22 @@
+{
+  "name": "prestabridge-router",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PrestaBridge Router Worker — validates and batches products to CloudFlare Queue",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0",
+    "@cloudflare/vitest-pool-workers": "^0.5.0",
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "wrangler": "^3.60.0"
+  },
+  "dependencies": {}
+}

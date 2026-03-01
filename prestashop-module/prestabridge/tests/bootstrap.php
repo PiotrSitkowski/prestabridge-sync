@@ -38,9 +38,34 @@ if (!function_exists('pSQL')) {
 if (!class_exists('Tools')) {
     class Tools
     {
+        /** @var array<string, mixed> */
+        private static array $postData = [];
+
         public static function getValue(string $key, mixed $default = false): mixed
         {
-            return $default;
+            return self::$postData[$key] ?? $default;
+        }
+
+        public static function isSubmit(string $key): bool
+        {
+            return isset(self::$postData[$key]);
+        }
+
+        public static function getAdminTokenLite(string $className): string
+        {
+            return 'test_token';
+        }
+
+        /** Seed POST data for tests */
+        public static function seedPost(array $data): void
+        {
+            self::$postData = $data;
+        }
+
+        /** Reset POST data */
+        public static function reset(): void
+        {
+            self::$postData = [];
         }
     }
 }
@@ -399,6 +424,26 @@ if (!class_exists('ImageManager')) {
 }
 
 // ============================================================
+// Smarty mock
+// ============================================================
+if (!class_exists('Smarty')) {
+    class Smarty
+    {
+        public array $assignedVars = [];
+
+        public function assign(array $vars): void
+        {
+            $this->assignedVars = array_merge($this->assignedVars, $vars);
+        }
+
+        public function reset(): void
+        {
+            $this->assignedVars = [];
+        }
+    }
+}
+
+// ============================================================
 // Context mock
 // ============================================================
 if (!class_exists('Context')) {
@@ -406,6 +451,8 @@ if (!class_exists('Context')) {
     {
         public object $shop;
         public object $language;
+        public Smarty $smarty;
+        public Link $link;
 
         private static ?Context $instance = null;
 
@@ -415,6 +462,8 @@ if (!class_exists('Context')) {
             $this->shop->id = 1;
             $this->language = new stdClass();
             $this->language->id = 1;
+            $this->smarty = new Smarty();
+            $this->link = new Link();
         }
 
         public static function getContext(): Context
@@ -446,10 +495,12 @@ if (!class_exists('Module')) {
         public bool $bootstrap = false;
         public string $displayName = '';
         public string $description = '';
+        public Context $context;
 
         public function __construct()
         {
-        // base stub
+            // Mirrors real PrestaShop Module::__construct() which sets $this->context
+            $this->context = Context::getContext();
         }
 
         public function install(): bool
@@ -465,6 +516,96 @@ if (!class_exists('Module')) {
         public function l(string $string, string $specific = '', ?string $locale = null): string
         {
             return $string;
+        }
+
+        public function display(string $file, string $template): string
+        {
+            return '<!-- tpl:' . basename($template) . ' -->';
+        }
+
+        public function displayConfirmation(string $msg): string
+        {
+            return '<div class="alert alert-success">' . htmlspecialchars($msg) . '</div>';
+        }
+
+        public function displayError(string $msg): string
+        {
+            return '<div class="alert alert-danger">' . htmlspecialchars($msg) . '</div>';
+        }
+    }
+}
+
+// ============================================================
+// HelperForm mock
+// ============================================================
+if (!class_exists('HelperForm')) {
+    class HelperForm
+    {
+        public mixed $module = null;
+        public string $name_controller = '';
+        public string $token = '';
+        public string $currentIndex = '';
+        public string $submit_action = '';
+        public int $default_form_language = 1;
+        public int $allow_employee_form_lang = 0;
+        public string $title = '';
+        public bool $show_toolbar = false;
+        public array $fields_value = [];
+
+        public function generateForm(array $fields_form): string
+        {
+            return '<!-- HelperForm:generated -->';
+        }
+    }
+}
+
+// ============================================================
+// AdminController mock
+// ============================================================
+if (!class_exists('AdminController')) {
+    class AdminController
+    {
+        public static string $currentIndex = 'index.php?controller=AdminModules';
+    }
+}
+
+// ============================================================
+// Category mock
+// ============================================================
+if (!class_exists('Category')) {
+    class Category
+    {
+        private static array $categories = [
+            ['id_category' => 2, 'name' => 'Home'],
+        ];
+
+        public static function getSimpleCategories(int $id_lang): array
+        {
+            return self::$categories;
+        }
+
+        public static function setCategories(array $categories): void
+        {
+            self::$categories = $categories;
+        }
+
+        public static function reset(): void
+        {
+            self::$categories = [['id_category' => 2, 'name' => 'Home']];
+        }
+    }
+}
+
+// ============================================================
+// Link mock (for context->link->getModuleLink())
+// ============================================================
+if (!class_exists('Link')) {
+    class Link
+    {
+        public function getModuleLink(string $module, string $controller, array $params = []): string
+        {
+            $query = http_build_query($params);
+            return 'https://shop.example.com/module/' . $module . '/' . $controller . '?' . $query;
         }
     }
 }

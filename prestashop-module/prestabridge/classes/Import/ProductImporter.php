@@ -52,11 +52,33 @@ class ProductImporter
             $product->updateCategories([(int)\PrestaBridge\Config\ModuleConfig::getImportCategory()]);
 
             // Set stock availability
-            StockAvailable::setQuantity(
-                (int)$product->id,
-                0,
-                (int)($payload['quantity'] ?? 0)
-            );
+            try {
+                StockAvailable::setQuantity(
+                    (int)$product->id,
+                    0,
+                    (int)($payload['quantity'] ?? 0),
+                    (int)$product->id_shop_default
+                );
+            }
+            catch (\Exception $e) {
+                // PrestaShop czasami po ->add() od razu zakłada wpis w stock_available przez własne hooki (bug w niektórych wersjach).
+                // Kolejne wywołanie setQuantity wyrzuca próbę wstawienia Duplicate Entry (1062).
+                if (strpos($e->getMessage(), '1062') !== false || strpos($e->getMessage(), 'Duplicate') !== false) {
+                    try {
+                        \Db::getInstance()->execute(
+                            'UPDATE `' . _DB_PREFIX_ . 'stock_available` 
+                             SET `quantity` = ' . (int)($payload['quantity'] ?? 0) . ' 
+                             WHERE `id_product` = ' . (int)$product->id . ' AND `id_product_attribute` = 0'
+                        );
+                    }
+                    catch (\Exception $e2) {
+                        BridgeLogger::error('Stock update manual bypass failed: ' . $e2->getMessage(), [], 'import');
+                    }
+                }
+                else {
+                    BridgeLogger::error('Stock set error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()], 'import');
+                }
+            }
 
             BridgeLogger::info(
                 'Product ' . $status,

@@ -305,7 +305,7 @@ function saveSettings(settings) {
 function generateHmacAuth(secret, body) {
   var timestamp = Math.floor(Date.now() / 1000).toString();
   var payload   = timestamp + '.' + body;
-  var signature = Utilities.computeHmacSha256Signature(payload, secret);
+  var signature = Utilities.computeHmacSha256Signature(payload, secret, Utilities.Charset.UTF_8);
   var signatureHex = signature.map(function(b) {
     return ('0' + (b & 0xFF).toString(16)).slice(-2);
   }).join('');

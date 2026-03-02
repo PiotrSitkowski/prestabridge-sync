@@ -61,25 +61,52 @@ class ImageAssigner
             // Copy file to correct PS location
             $newPath = $image->getPathForCreation();
 
-            // Detect image type and extension
-            $mimeType = \mime_content_type($tmpFilePath);
-            $extension = \image_type_to_extension(\exif_imagetype($tmpFilePath), false);
+            // PrestaShop ALWAYS uses 'jpg' extension for product images internally,
+            // regardless of actual format. ImageManager::resize() handles conversion.
+            $extension = 'jpg';
+            $fullPath = $newPath . '.' . $extension;
 
-            if (!copy($tmpFilePath, $newPath . '.' . $extension)) {
+            // Ensure the target directory exists
+            $targetDir = dirname($newPath);
+            if (!is_dir($targetDir)) {
+                @mkdir($targetDir, 0775, true);
+            }
+
+            // Copy source image to PS image path
+            if (!copy($tmpFilePath, $fullPath)) {
                 $image->delete();
-                throw new \RuntimeException('Failed to copy image file');
+                throw new \RuntimeException('Failed to copy image file to: ' . $fullPath);
+            }
+
+            // CRITICAL: Verify the file actually exists and has content.
+            // Without this, PS resolves a dangling Image record to a random product's image.
+            if (!file_exists($fullPath) || filesize($fullPath) === 0) {
+                @unlink($fullPath);
+                $image->delete();
+                throw new \RuntimeException('Image file verification failed (missing or empty): ' . $fullPath);
             }
 
             // Generate thumbnails for all product image types
             $types = ImageType::getImagesTypes('products');
             foreach ($types as $type) {
-                ImageManager::resize(
-                    $newPath . '.' . $extension,
-                    $newPath . '-' . stripslashes($type['name']) . '.' . $extension,
+                $thumbPath = $newPath . '-' . stripslashes($type['name']) . '.' . $extension;
+                $resizeResult = ImageManager::resize(
+                    $fullPath,
+                    $thumbPath,
                     (int)$type['width'],
                     (int)$type['height'],
                     $extension
                 );
+
+                // If thumbnail generation fails, log but continue —
+                // the main image exists, PS can still display it
+                if (!$resizeResult) {
+                    BridgeLogger::warning('Thumbnail generation failed', [
+                        'productId' => $productId,
+                        'type' => $type['name'],
+                        'thumbPath' => $thumbPath,
+                    ], 'image', null, $productId);
+                }
             }
 
             // Cleanup temporary file

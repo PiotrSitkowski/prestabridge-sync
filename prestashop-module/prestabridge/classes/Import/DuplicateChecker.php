@@ -31,9 +31,7 @@ class DuplicateChecker
     public static function getProductIdBySku(string $sku): ?int
     {
         $result = Db::getInstance()->getValue(
-            'SELECT id_product FROM ' . _DB_PREFIX_ . 'product
-             WHERE reference = \'' . pSQL($sku) . '\'
-             LIMIT 1'
+            'SELECT id_product FROM ' . _DB_PREFIX_ . 'product WHERE reference = \'' . pSQL($sku) . '\''
         );
 
         return $result ? (int)$result : null;

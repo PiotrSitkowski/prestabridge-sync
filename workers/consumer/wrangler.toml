@@ -6,7 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 # Zmienne NIE-SECRET (secrety ustawiaj przez: wrangler secret put AUTH_SECRET)
 [vars]
 ENVIRONMENT = "production"
-PRESTASHOP_ENDPOINT = "https://your-shop.com/module/prestabridge/api"
+PRESTASHOP_ENDPOINT = "https://dev.bikeatelier.pl/module/prestabridge/api"
 REQUEST_TIMEOUT_MS = "25000"
 
 # Queue Consumer binding

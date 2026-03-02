@@ -3,12 +3,17 @@
 declare(strict_types = 1)
 ;
 
-use PrestaBridge\Config\ModuleConfig;
-use PrestaBridge\Logging\BridgeLogger;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
+
+// PSR-4 autoload — must be loaded before any PrestaBridge\* class usage
+if (file_exists(__DIR__ . '/vendor/autoload.php')) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
+use PrestaBridge\Config\ModuleConfig;
+use PrestaBridge\Logging\BridgeLogger;
 
 /**
  * PrestaBridge — Product synchronization bridge between CloudFlare and PrestaShop.

@@ -3,6 +3,10 @@
 declare(strict_types = 1)
 ;
 
+if (file_exists(dirname(__DIR__, 2) . '/vendor/autoload.php')) {
+    require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+}
+
 use PrestaBridge\Auth\HmacAuthenticator;
 use PrestaBridge\Import\DuplicateChecker;
 use PrestaBridge\Import\ProductImporter;
@@ -32,8 +36,25 @@ class PrestabridgeApiModuleFrontController extends ModuleFrontController
     public function initContent(): void
     {
         parent::initContent();
-
         header('Content-Type: application/json');
+
+        try {
+            $this->handleRequest();
+        }
+        catch (\Throwable $e) {
+            http_response_code(500);
+            die(json_encode([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'type' => get_class($e),
+                'file' => basename($e->getFile()),
+                'line' => $e->getLine(),
+            ]));
+        }
+    }
+
+    private function handleRequest(): void
+    {
 
         // --------------------------------------------------------
         // Step 1: Only POST allowed
@@ -188,6 +209,38 @@ class PrestabridgeApiModuleFrontController extends ModuleFrontController
             // 6d. Enqueue images for async CRON processing
             $imagesQueued = 0;
             if (!empty($product['images']) && is_array($product['images'])) {
+                try {
+                    // Always clear stale/orphaned queue entries for this product
+                    // (handles orphaned entries from tests, deleted products, etc.)
+                    ImageQueueManager::clearForProduct($productId);
+
+                    // When updating: also remove old PrestaShop Image objects
+                    if ($updateMode) {
+                        $oldImages = \Image::getImages((int)\Configuration::get('PS_LANG_DEFAULT'), $productId);
+                        foreach ($oldImages as $oldImg) {
+                            $imgObj = new \Image((int)$oldImg['id_image']);
+                            $imgObj->delete();
+                        }
+                        BridgeLogger::info(
+                            'API: Cleared old images for product update',
+                        ['productId' => $productId, 'oldImagesRemoved' => count($oldImages)],
+                            'api',
+                            $product['sku'],
+                            $productId
+                        );
+                    }
+                }
+                catch (\Exception $e) {
+                    // Non-fatal — log and continue with new image queueing
+                    BridgeLogger::warning(
+                        'API: Failed to clear old images (non-fatal): ' . $e->getMessage(),
+                    ['productId' => $productId],
+                        'api',
+                        $product['sku'],
+                        $productId
+                    );
+                }
+
                 $imagesQueued = ImageQueueManager::enqueue($productId, $product['sku'], $product['images']);
             }
 

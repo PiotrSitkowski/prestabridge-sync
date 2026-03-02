@@ -51,6 +51,27 @@ class ImageQueueManager
     }
 
     /**
+     * Removes all non-completed image queue entries for a product.
+     * Call before re-enqueueing images on product update (overwrite mode).
+     *
+     * Removes: pending, processing, failed entries.
+     * Keeps: completed entries (historical record).
+     *
+     * @param int $productId PrestaShop product ID
+     * @return int Number of entries removed
+     */
+    public static function clearForProduct(int $productId): int
+    {
+        Db::getInstance()->execute(
+            'DELETE FROM ' . _DB_PREFIX_ . 'prestabridge_image_queue
+             WHERE id_product = ' . (int)$productId . '
+             AND status IN ("pending", "processing", "failed")'
+        );
+
+        return (int)Db::getInstance()->getValue('SELECT ROW_COUNT()');
+    }
+
+    /**
      * Acquires a batch of pending images with pessimistic locking.
      *
      * Uses a unique lock_token to prevent concurrent CRON executions

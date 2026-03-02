@@ -3,6 +3,10 @@
 declare(strict_types = 1)
 ;
 
+if (file_exists(dirname(__DIR__, 2) . '/vendor/autoload.php')) {
+    require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+}
+
 use PrestaBridge\Image\ImageAssigner;
 use PrestaBridge\Image\ImageDownloader;
 use PrestaBridge\Image\ImageLockManager;

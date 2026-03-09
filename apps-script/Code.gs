@@ -24,15 +24,29 @@ var DEFAULT_BATCH_SIZE = 5;
 
 /**
  * Dodaje menu "PrestaBridge" do arkusza Google.
- * Wywoływane automatycznie przy otwarciu arkusza (simple trigger).
+ * Wywoływane automatycznie przy otwarciu arkusza (simple trigger)
+ * oraz zaraz po zainstalowaniu dodatku przez onInstall(e).
+ *
+ * @param {Object} e - Obiekt zdarzenia przekazywany przez trigger.
  */
-function onOpen() {
+function onOpen(e) {
   SpreadsheetApp.getUi()
     .createMenu('PrestaBridge')
     .addItem('Wyślij zaznaczone produkty', 'sendSelectedProducts')
     .addSeparator()
     .addItem('Ustawienia', 'showSettings')
     .addToUi();
+}
+
+/**
+ * Wywoływana automatycznie po zainstalowaniu dodatku przez użytkownika.
+ * Wywołuje onOpen(e), dzięki czemu menu pojawia się natychmiast
+ * bez konieczności odświeżania arkusza.
+ *
+ * @param {Object} e - Obiekt zdarzenia przekazywany przez trigger instalacji.
+ */
+function onInstall(e) {
+  onOpen(e);
 }
 
 // ---------------------------------------------------------------------------
@@ -59,8 +73,8 @@ function sendSelectedProducts() {
     return;
   }
 
-  // Pobierz ustawienia z PropertiesService
-  var props      = PropertiesService.getScriptProperties();
+  // Pobierz ustawienia z PropertiesService (getUserProperties — izolacja per użytkownik)
+  var props      = PropertiesService.getUserProperties();
   var workerUrl  = props.getProperty(PROP_WORKER_URL);
   var authSecret = props.getProperty(PROP_AUTH_SECRET);
   var batchSize  = parseInt(props.getProperty(PROP_BATCH_SIZE), 10) || DEFAULT_BATCH_SIZE;
@@ -246,7 +260,7 @@ function showSettings() {
  * @returns {{ workerUrl: string, authSecretSet: boolean, batchSize: number }}
  */
 function getSettings() {
-  var props = PropertiesService.getScriptProperties();
+  var props = PropertiesService.getUserProperties();
   return {
     workerUrl:     props.getProperty(PROP_WORKER_URL)  || '',
     authSecretSet: !!(props.getProperty(PROP_AUTH_SECRET)),
@@ -263,7 +277,7 @@ function getSettings() {
 function saveSettings(settings) {
   if (!settings) throw new Error('Brak danych ustawień.');
 
-  var props = PropertiesService.getScriptProperties();
+  var props = PropertiesService.getUserProperties();
 
   var workerUrl = String(settings.workerUrl || '').trim();
   if (workerUrl) {
